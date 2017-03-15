@@ -28,16 +28,22 @@ export default class Shake {
         this.lastZ = null;
     }
 
+    handleEvent(event) {
+        if(event.type === 'devicemotion') {
+            return this.devicemotion(event);
+        }
+    }
+
     // 开始监听摇一摇
     start() {
         this.refresh();
-        window.addEventListener('devicemotion', this.devicemotion.bind(this), true);
+        window.addEventListener('devicemotion', this, false);
     }
 
     // 结束监听摇一摇
     stop() {
         this.refresh();
-        window.removeEventListener('devicemotion', this.devicemotion, true);
+        window.removeEventListener('devicemotion', this, false);
     }
 
     // 暂时eventType 只支持shake

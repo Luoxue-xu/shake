@@ -54,7 +54,7 @@ class ShakeGame {
         setTimeout(() => {
             this.shakeTop.classList.remove('translate');
             this.shakeBottom.classList.remove('translate');
-        }, 2000);
+        }, 1000);
     }
 
     showInfo() {
@@ -72,6 +72,7 @@ class ShakeGame {
 
         window.addEventListener('popstate', () => {
             if (window.location.hash !== 'info') {
+                this.shake.start();
                 this.shakeInfo.classList.remove('show');
             }
         });

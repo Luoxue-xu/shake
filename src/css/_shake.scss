@@ -25,7 +25,7 @@ body {
     top: 0;
     &.translate {
         box-shadow: 0 1px 2px rgba(0, 0, 0, 1);
-        animation: trantop 2s ease-out;
+        animation: trantop 1s ease-out;
     }
     span {
         bottom: .24rem;
@@ -36,7 +36,7 @@ body {
     bottom: 0;
     &.translate {
         box-shadow: 0 -1px 2px rgba(0, 0, 0, 1);
-        animation: tranbottom 2s linear;
+        animation: tranbottom 1s linear;
     }
     span {
         top: .12rem;
@@ -47,7 +47,7 @@ body {
     display: flex;
     position: fixed;
     left: 50%;
-    bottom: .48rem;
+    bottom: .8rem;
     width: 70%;
     height: .8rem;
     transform: translate(-50%, 0);
