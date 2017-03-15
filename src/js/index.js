@@ -4,17 +4,20 @@ import data from './data';
 class ShakeGame {
 
     constructor(options) {
-        this.shakeTop = document.querySelector('.shake-top');
-        this.shakeBottom = document.querySelector('.shake-bottom');
-        this.shakeCard = document.querySelector('.shake-card');
-        this.shakeSmallPhoto = document.querySelector('.shake-card-photo');
-        this.sketch = this.shakeTop.querySelector('span');
-        this.shakeInfo = document.querySelector('.shake-info');
+        this.shakeTop = this.$('.shake-top');
+        this.shakeBottom = this.$('.shake-bottom');
+        this.shakeCard = this.$('.music-player');
+        this.shakeInfo = this.$('.shake-info');
+        this.musicPlay = this.$('.music-player-btn');
+        this.musicName = this.$('.music-player-name');
+        this.musicAuthor = this.$('.music-player-author');
+        this.music = null; // 当前播放的音乐
+        this.playing = false; // 音乐是否正在播放
         this.shake = new Shake({
             threshold: 15
         });
-        this.randomSketch();
-        this.audio = document.querySelector('.audio');
+
+        this.audio = this.$('.audio');
         document.addEventListener('WeixinJSBridgeReady', () => {
             this.audio.muted = true;
             this.audio.play();
@@ -23,59 +26,101 @@ class ShakeGame {
             }, 2000);
         }, false);
         this.shake.start();
-        this.upDate();
+        this.data = data;
         this.events();
     }
 
-    randomSketch() {
-        let names = ['妹子', '女票', '老婆', '老公', '男神', '男票', '知己', '红颜', '蓝颜'];
-        let loop = () => {
-            this.sketch.innerHTML = `找${names[Math.floor(Math.random() * names.length)]}`;
-            setTimeout(loop, 300);
+    $(arg) {
+        return document.querySelector(arg);
+    }
+
+    // 随机一首歌
+    randomMusic() {
+        let len = this.data.length;
+        let rd = Math.floor(Math.random() * len);
+        return this.data[rd];
+    }
+
+    // 创建音乐播放器
+    createMusicPlayer() {
+        let _music = this.randomMusic();
+
+        this.shakeCard.style.opacity = 1;
+        this.musicName.innerHTML = _music.name;
+        this.musicAuthor.innerHTML = _music.author;
+
+        this.music = document.createElement('audio');
+        this.music.src = _music.url;
+    }
+
+    // 开始摇一摇动画
+    openBg() {
+        if(this.music) {
+            // 正在播放音乐则停止
+            this.music.pause();
         }
-        setTimeout(loop, 300);
-    }
-
-    // 请求数据
-    upDate() {
-        this.data = data;
-    }
-
-    // 打开天窗说亮话
-    open() {
         this.audio.play();
-        this.imgUrl = `url(${this.data[Math.floor(Math.random() * this.data.length)]})`;
         this.shakeTop.classList.add('translate');
         this.shakeBottom.classList.add('translate');
-        document.body.style.backgroundImage = this.imgUrl
-        this.shakeCard.style.opacity = 1;
-        this.shakeSmallPhoto.style.backgroundImage = this.imgUrl;
-
-        setTimeout(() => {
-            this.shakeTop.classList.remove('translate');
-            this.shakeBottom.classList.remove('translate');
-        }, 1000);
     }
 
+    // 结束摇一摇动画
+    closeBg() {
+        this.shakeTop.classList.remove('translate');
+        this.shakeBottom.classList.remove('translate');
+    }
+
+    // 显示详情
     showInfo() {
+        history.pushState({}, 'info', window.location.href + '#info');
         this.shake.stop();
         this.shakeInfo.classList.add('show');
-        this.shakeInfo.style.backgroundImage = this.imgUrl;
+    }
+
+    // 隐藏详情
+    hideInfo() {
+        this.shake.start();
+        this.shakeInfo.classList.remove('show');
     }
 
     events() {
-        this.shake.on('shake', this.open.bind(this));
-        this.shakeCard.addEventListener('touchstart', () => {
-            history.pushState({}, 'info', window.location.href + '#info');
-            this.showInfo();
+
+        // 监听摇一摇
+        this.shake.on('shake', () => {
+            this.openBg();
+            setTimeout(() => {
+                this.closeBg();
+                this.createMusicPlayer();
+            }, 1000);
         });
 
+        // 查看详情
+        this.shakeCard.addEventListener('touchstart', () => {
+            this.showInfo();
+        }, false);
+
+        // 点击播放音乐
+        this.musicPlay.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+            if(this.music) {
+                if(this.playing) {
+                    this.musicPlay.classList.remove('playing');
+                    this.playing = false;
+                    this.music.pause();
+                }else {
+                    this.musicPlay.classList.add('playing');
+                    this.playing = true;
+                    this.music.play();
+                }
+            }
+        }, false);
+
+        // 监听返回
         window.addEventListener('popstate', () => {
             if (window.location.hash !== 'info') {
-                this.shake.start();
-                this.shakeInfo.classList.remove('show');
+                this.hideInfo();
             }
-        });
+        }, false);
     }
 
 }

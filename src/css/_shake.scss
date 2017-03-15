@@ -43,11 +43,11 @@ body {
     }
 }
 
-.shake-card {
+.music-player {
     display: flex;
     position: fixed;
     left: 50%;
-    bottom: .8rem;
+    bottom: 1.6rem;
     width: 70%;
     height: .8rem;
     transform: translate(-50%, 0);
@@ -66,17 +66,47 @@ body {
     opacity: 0;
     transition: all .3s ease-out;
 }
-.shake-card-photo {
+.music-player-btn {
+    position: relative;
     width: .8rem;
     height: .8rem;
-    background-size: cover;
-    background-color: #fefefe;
+    background: #ccc;
+    &:before {
+        position: absolute;
+        content: "";
+        top: 50%;
+        left: 50%;
+        margin: -.12rem 0 0 -.08rem;
+        width: 0;
+        height: 0;
+        border: .16rem solid transparent;
+        border-top-width: .12rem;
+        border-bottom-width: .12rem;
+        border-left: .16rem solid #fff;
+    }
+    &.playing:before {
+        display: inline-block;
+        margin: -.1rem 0 0 -.08rem;
+        width: .16rem;
+        height: .2rem;
+        border: none;
+        border-left: 5px solid #fff;
+        border-right: 5px solid #fff;
+    }
 }
-.shake-card-sketch {
-    margin-left: .2rem;
-    line-height: .8rem;
-    color: #95A5A6;
+.music-player-sketch {
+    padding: .2rem;
+}
+.music-player-name {
     font-size: .16rem;
+    color: #34495E;
+    line-height: 1;
+}
+.music-player-author {
+    margin-top: .12rem;
+    font-size: .14rem;
+    color: #95A5A6;
+    line-height: 1;
 }
 
 @keyframes trantop {
