@@ -2,7 +2,17 @@
 @import './reset';
 @import './shake';
 
-.console {
-    padding: .24rem;
-    font-size: .12rem;
+.shake-info {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: #fff;
+    transform: translate(100%, 0);
+    transition: all .3s ease-out;
+    background-size: cover;
+    &.show {
+        transform: translate(0, 0);
+    }
 }
