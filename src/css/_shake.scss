@@ -85,13 +85,32 @@ body {
         border-left: .16rem solid #fff;
     }
     &.playing:before {
-        display: inline-block;
         margin: -.1rem 0 0 -.08rem;
         width: .16rem;
         height: .2rem;
         border: none;
         border-left: 5px solid #fff;
         border-right: 5px solid #fff;
+    }
+    &.loading:before {
+        margin: -.12rem 0 0 -.12rem;
+        width: .24rem;
+        height: .24rem;
+        border: 2px solid transparent;
+        border-top-color: #E74C3C;
+        border-right-color: #3498DB;
+        border-bottom-color: #2ECC71;
+        border-left-color: #9B59B6;
+        border-radius: 50%;
+        animation: loading .5s linear infinite;
+    }
+}
+@keyframes loading {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }
 .music-player-sketch {

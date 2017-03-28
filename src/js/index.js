@@ -13,8 +13,9 @@ class ShakeGame {
         this.musicAuthor = this.$('.music-player-author');
         this.music = null; // 当前播放的音乐
         this.playing = false; // 音乐是否正在播放
+        this.hasLoad = false; // 是否有加载部分音乐数据
         this.shake = new Shake({
-            threshold: 15
+            threshold: 10
         });
 
         this.audio = this.$('.audio');
@@ -45,6 +46,7 @@ class ShakeGame {
     createMusicPlayer() {
         let _music = this.randomMusic();
 
+        this.hasLoad = false;
         this.shakeCard.style.opacity = 1;
         this.musicName.innerHTML = _music.name;
         this.musicAuthor.innerHTML = _music.author;
@@ -57,7 +59,7 @@ class ShakeGame {
     openBg() {
         if(this.music) {
             // 正在播放音乐则停止
-            this.music.pause();
+            this.stopMusic();
         }
         this.audio.play();
         this.shakeTop.classList.add('translate');
@@ -83,6 +85,39 @@ class ShakeGame {
         this.shakeInfo.classList.remove('show');
     }
 
+    // 播放音乐
+    playMusic() {
+        this.playing = true;
+        this.musicPlay.classList.add('loading');
+        this.music.play();
+
+        // 监听是否暂停之后再次开始播放
+        this.music.addEventListener('playing', (e) => {
+            if(!this.hasLoad) {
+                return;
+            }
+            this.musicPlay.classList.remove('loading');
+            this.musicPlay.classList.add('playing');
+        }, false);
+
+        // 监听是否可以开始播放
+        this.music.addEventListener('canplay', (e) => {
+            setTimeout(() => {
+                this.hasLoad = true;
+                this.musicPlay.classList.remove('loading');
+                this.musicPlay.classList.add('playing');
+            }, 2000);
+        }, false);
+    }
+
+    // 停止音乐
+    stopMusic() {
+        this.musicPlay.classList.remove('playing');
+        this.musicPlay.classList.remove('loading');
+        this.playing = false;
+        this.music.pause();
+    }
+
     events() {
 
         // 监听摇一摇
@@ -104,13 +139,9 @@ class ShakeGame {
             e.stopPropagation();
             if(this.music) {
                 if(this.playing) {
-                    this.musicPlay.classList.remove('playing');
-                    this.playing = false;
-                    this.music.pause();
+                    this.stopMusic();
                 }else {
-                    this.musicPlay.classList.add('playing');
-                    this.playing = true;
-                    this.music.play();
+                    this.playMusic();
                 }
             }
         }, false);
