@@ -17,9 +17,14 @@
 ```
 import Shake from './shake';
 
-let shake = new Shake({
+let myShake = new Shake({
     timer: 2000, // 每次摇一摇的间隔时间
     threshold: 10 // 多大摇动幅度可以触发摇一摇 数值越大，表示摇动的幅度要越大.
+});
+
+// 监听摇一摇
+myShake.on('shake', (data) => {
+    // 摇成功之后的处理
 });
 ```
 
